@@ -39,7 +39,7 @@ home_dir=$(pwd)
 value_subj="/C=RU/ST=Moscow\
 /L=Moscow/O=InfoWatch\
 /OU=IT/CN=?\
-/emailAddress=support@demo.lab"
+/emailAddress=name@your.domain"
 
 if ! [[ -d $certs_dir ]]; then
   mkdir -p $certs_dir

@@ -39,7 +39,7 @@ certs_dir="/etc/pki/"
 home_dir=$(pwd)
 
 value_subj="/C=RU/ST=Moscow\
-/L=Moscow/O=InfoWatch\
+/L=Moscow/O=WunderWafli\
 /OU=IT/CN=?\
 /emailAddress=name@your.domain"
 

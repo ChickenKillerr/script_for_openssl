@@ -17,6 +17,7 @@ openssl:
         + v3_ca
         + v3_intermediate_ca
         + server_cert
+		+ usr_cert
     + subj - specifying the values of the certificate subject fields
     + key - path to private key
     + out - path where to save the request
@@ -26,6 +27,7 @@ openssl:
         + v3_ca
         + v3_intermediate_ca
         + server_cert
+		+ usr_cert
     + in - request for signing
     + out - path where to save the signed certificate    
 
@@ -44,6 +46,9 @@ value_subj="/C=RU/ST=Moscow\
 if ! [[ -d $certs_dir ]]; then
   mkdir -p $certs_dir
   cd $certs_dir
+else
+  echo "directory exists"
+  exit 1
 fi
 
 create_certificate () {
@@ -67,6 +72,11 @@ sign_certificate () {
     -out "${work_dir}/public.pem"
 }
 
+create_files () {
+  mkdir crl certs requests newcerts
+  touch index.txt index.txt.attr
+  echo 01 > serial
+}
 
 work_dir="$(pwd)/${cert}"
 

@@ -41,7 +41,7 @@ home_dir=$(pwd)
 value_subj="/C=RU/ST=Moscow\
 /L=Moscow/O=WunderWafli\
 /OU=IT/CN=?\
-/emailAddress=name@your.domain"
+/emailAddress=your@mail.com" #!
 
 if ! [[ -d $certs_dir ]]; then
   mkdir -p $certs_dir
@@ -52,7 +52,7 @@ else
 fi
 
 create_certificate () {
-
+  export SSLSAN="email:your@mail.com,DNS:${2},DNS:${2}.mail.com" #!
   openssl req \
     -config openssl.cnf \
     ${3} \
@@ -78,13 +78,28 @@ create_files () {
   echo 01 > serial
 }
 
-work_dir="$(pwd)/${cert}"
+ #!
 
-mkdir $work_dir && cd $work_dir
-cp ${home_dir}/openssl.cnf .
-openssl genrsa -out private.pem &> /dev/null
+for cert in ${certs[@]}
+do
+  work_dir="$(pwd)/${cert}"
+  mkdir $work_dir && cd $work_dir
+  cp ${home_dir}/openssl.cnf .
+  create_files
+  openssl genrsa -out private.pem &> /dev/null
 
-create_certificate "v3_ca" "CA" "-x509"
+  if [[ $cert == "CA" ]]; then
+    create_certificate "v3_ca" "CA" "-x509"
+  elif [[ $cert == "intermediate" || $cert == "squid" ]]; then
+    create_certificate "v3_intermediate_ca" ${cert} "-new"
+    cd ../CA
+    sign_certificate "v3_intermediate_ca"
+  else
+    create_certificate "server_cert" ${cert} "-new"
+    cd ../intermediate
+    sign_certificate "server_cert"
+  fi
 
-cd $certs_dir
+  cd $certs_dir
+done
 ```

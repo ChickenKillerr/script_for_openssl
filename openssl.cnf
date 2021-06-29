@@ -5,7 +5,7 @@ MCA_KEYAGE = 3650
 # Alt Subject Name for certificate.
 # for example: 'email:support@demo.lab,DNS:CA,DNS:CA.demo.lab'
 SSLSAN = 'email:support@demo.lab,DNS:CA,DNS:CA.demo.lab'
-#SSLSAN = ${ENV::SAN}
+#SSLSAN = ${ENV::SSLSAN}
 
 default_md = sha512
 
